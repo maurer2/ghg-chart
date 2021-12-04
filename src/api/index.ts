@@ -1,6 +1,8 @@
 import * as countryCodesApi from './get-country-codes';
 import * as countryDataApi from './get-country-data';
 
+import type { CountryEmissionsYearListKeyed } from '../types/api'
+
 require('dotenv').config();
 
 try {
@@ -11,18 +13,18 @@ try {
 
   Promise.allSettled([countryData1, countryData2])
     .then((results) => {
-      const fulfilledPromises = results.filter(result => result.status === 'fulfilled')
+      const mappedEntries = results
+        .filter(result => result.status === 'fulfilled')
+        .map((fulfilledPromise) => {
+          const entry = fulfilledPromise as PromiseFulfilledResult<CountryEmissionsYearListKeyed>
 
-      const mappedEntries = fulfilledPromises.map((fulfilledPromise) => {
-        const entry = fulfilledPromise as PromiseFulfilledResult<any>
-        const [key] = Object.keys(entry.value)
+          const [key] = Object.keys(entry.value)
+          const value = entry.value[key]
 
-        console.log([key, entry.value[key]])
+          return [key, value]
+        })
 
-        return [key, entry.value[key]]
-      })
-
-      const mergedOject = Object.fromEntries(mappedEntries)
+      const mergedOject: CountryEmissionsYearListKeyed = Object.fromEntries(mappedEntries)
 
       console.log(mergedOject)
     })
