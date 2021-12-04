@@ -1,13 +1,17 @@
 
 import axios from 'axios'
 import responseStaticJSON from './response/country.json'
-import type {Country, CountryDataResponse, CountryEmissionsPerYear} from '../types/api'
+import type { Country, CountryDataResponse, CountryEmissionsYearValueList, CountryEmissionsYearList, CountryEmissionsYearListKeyed } from '../types/api'
 
-function getYearCarbonMapping (countryData: CountryDataResponse[]): CountryEmissionsPerYear | any {
-  const yearCarbonMap = countryData.map((country) => [country.year, country.value])
-  const countryMap = Object.fromEntries(yearCarbonMap);
+function getYearCarbonMapping(countryData: CountryDataResponse[], id: Country['id']): CountryEmissionsYearListKeyed {
+  const yearCarbonMap: CountryEmissionsYearValueList = countryData.map((country) => [country.year, country.value])
+  const countryMap: CountryEmissionsYearList = Object.fromEntries(yearCarbonMap);
 
-  return countryMap
+  const keyedList: CountryEmissionsYearListKeyed = {
+    [id]: countryMap
+  }
+
+  return keyedList
 }
 
 async function getCountryData(id: Country['id']): Promise<any> {
@@ -36,7 +40,7 @@ async function getCountryData(id: Country['id']): Promise<any> {
       responseData = response.data
     }
 
-    countryYearCarbonList = getYearCarbonMapping(responseData)
+    countryYearCarbonList = getYearCarbonMapping(responseData, id)
 
   } catch (error) {
     throw new Error(error as any)

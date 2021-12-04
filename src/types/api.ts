@@ -1,3 +1,5 @@
+import { UrlWithStringQuery } from "url"
+
 export type Country = {
   id: number;
   version?: any;
@@ -31,8 +33,12 @@ export type CountryDataResponse = {
     score: string;
 }
 
-export type CountryEmissionsPerYear = Record<CountryDataResponse['year'], CountryDataResponse['value']>
+export type CountryEmissionsYearValue = [CountryDataResponse['year'], CountryDataResponse['value']]
 
-export type CountryEmissionsYearName = Record<CountryDataResponse['id'], CountryDataResponse['value']>
+export type CountryEmissionsYearValueList = CountryEmissionsYearValue[]
 
-export type CountriesCodeEmissionYearMap = Record<CountryDataResponse['year'], CountryEmissionsYearName>
+export type CountryEmissionsYearList = Record<CountryDataResponse['year'], CountryDataResponse['value']>
+
+export type CountryEmissionsYearListKeyed = {
+  [key: string]: CountryEmissionsYearList
+}
