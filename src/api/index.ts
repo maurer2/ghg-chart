@@ -1,5 +1,5 @@
-import * as countryCodesApi from './get-country-codes'
-import * as countryDataApi from './get-country-data'
+import * as countryCodesApi from './get-country-codes';
+import * as countryDataApi from './get-country-data';
 
 require('dotenv').config();
 
@@ -10,13 +10,22 @@ try {
   const countryData2 = countryDataApi.getCountryData(1)
 
   Promise.allSettled([countryData1, countryData2])
-    .then((results) => results.forEach(result => {
-      if (result.status === 'fulfilled') {
-        console.log(result.status, result.value);
-      } else {
-        console.log(result.status, result.reason);
-      }
-    }))
+    .then((results) => {
+      const fulfilledPromises = results.filter(result => result.status === 'fulfilled')
+
+      const mappedEntries = fulfilledPromises.map((fulfilledPromise) => {
+        const entry = fulfilledPromise as PromiseFulfilledResult<any>
+        const [key] = Object.keys(entry.value)
+
+        console.log([key, entry.value[key]])
+
+        return [key, entry.value[key]]
+      })
+
+      const mergedOject = Object.fromEntries(mappedEntries)
+
+      console.log(mergedOject)
+    })
 
 } catch (error) {
   throw new Error(error as any)
