@@ -30,10 +30,19 @@ async function getPollutionData(countriesEmissionsList: CountryEmissionsYearList
     console.log(ids[0], valueOfCurrentYearFirst)
     console.log(ids[1], valueOfCurrentYearSecond)
 
-    return year
+    const results =  [year, {
+      [ids[0]]: valueOfCurrentYearFirst,
+      [ids[1]]: valueOfCurrentYearSecond
+    }]
+
+    return results
   })
 
-  // console.log(emissionsByYears)
+  const emissionsObject = Object.fromEntries(emissionsByYears)
+
+  console.log(emissionsObject)
+
+  return emissionsObject
 }
 
 export { getPollutionData }
