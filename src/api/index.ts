@@ -5,11 +5,18 @@ require('dotenv').config();
 
 try {
   const countryCodes = countryCodesApi.getCountryCodes()
-  const countryData = countryDataApi.getCountryData(100)
 
-  countryData.then((value) => {
-    console.log(value)
-  })
+  const countryData1 = countryDataApi.getCountryData(100)
+  const countryData2 = countryDataApi.getCountryData(1)
+
+  Promise.allSettled([countryData1, countryData2])
+    .then((results) => results.forEach(result => {
+      if (result.status === 'fulfilled') {
+        console.log(result.status, result.value);
+      } else {
+        console.log(result.status, result.reason);
+      }
+    }))
 
 } catch (error) {
   throw new Error(error as any)

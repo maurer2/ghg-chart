@@ -1,10 +1,11 @@
 
 import axios from 'axios'
-import responseStaticJSON from './response/country.json'
+import responseStaticJSON10 from './response/country10.json'
+import responseStaticJSON100 from './response/country100.json'
 import type { Country, CountryDataResponse, CountryEmissionsYearValueList, CountryEmissionsYearList, CountryEmissionsYearListKeyed } from '../types/api'
 
 function getYearCarbonMapping(countryData: CountryDataResponse[], id: Country['id']): CountryEmissionsYearListKeyed {
-  const yearCarbonMap: CountryEmissionsYearValueList = countryData.map((country) => [country.year, country.value])
+  const yearCarbonMap: CountryEmissionsYearValueList = countryData.map((country) => [country.year, country.carbon])
   const countryMap: CountryEmissionsYearList = Object.fromEntries(yearCarbonMap);
 
   const keyedList: CountryEmissionsYearListKeyed = {
@@ -14,7 +15,7 @@ function getYearCarbonMapping(countryData: CountryDataResponse[], id: Country['i
   return keyedList
 }
 
-async function getCountryData(id: Country['id']): Promise<any> {
+async function getCountryData(id: Country['id']): Promise<CountryEmissionsYearListKeyed> {
   const apiKey = process.env.API_KEY
   const isDevMode = process.env.NODE_ENV !== 'production'
 
@@ -28,9 +29,13 @@ async function getCountryData(id: Country['id']): Promise<any> {
     let responseData: any
 
     if (isDevMode) {
-      responseData = responseStaticJSON
+      if (id === 100) {
+        responseData = responseStaticJSON10
+      } else {
+        responseData = responseStaticJSON100
+      }
     } else {
-      const response = await axios.get(`https://api.footprintnetwork.org/v1/data/${id}/all`, {
+      const response = await axios.get(`https://api.footprintnetwork.org/v1/data/${id}/all/EFCpc`, {
         auth: {
           username: 'Standard issue cat',
           password: apiKey
