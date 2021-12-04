@@ -1,5 +1,6 @@
 import * as countryCodesApi from './get-country-codes';
 import * as countryDataApi from './get-country-data';
+import * as pollutionDataApi from './get-pollution-data';
 
 import type { CountryEmissionsYearListKeyed } from '../types/api'
 
@@ -26,7 +27,7 @@ try {
 
       const mergedOject: CountryEmissionsYearListKeyed = Object.fromEntries(mappedEntries)
 
-      console.log(mergedOject)
+      pollutionDataApi.getPollutionData(mergedOject)
     })
 
 } catch (error) {
