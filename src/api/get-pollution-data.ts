@@ -15,27 +15,22 @@ function getYears(countriesEmissionsList: CountryEmissionsYearListKeyed) {
 
 async function getPollutionData(countriesEmissionsList: CountryEmissionsYearListKeyed) {
   const years = getYears(countriesEmissionsList)
-  const ids = Object.keys(countriesEmissionsList)
-
-  console.log(countriesEmissionsList[ids[0]])
+  const keyValueList = Object.entries(countriesEmissionsList)
 
   const emissionsByYears = years.map((year: any) => {
-    const entryFirst = countriesEmissionsList[ids[0]]
-    const entrySecond = countriesEmissionsList[ids[1]]
+    const emissionsOfCurrentYearForIds = keyValueList.map((entry) => {
+      const [id, yearsEmissionList] = entry
 
-    const valueOfCurrentYearFirst = entryFirst[year]
-    const valueOfCurrentYearSecond = entrySecond[year]
+      const valueOfCurrentYear = yearsEmissionList[year]
 
-    console.log(year)
-    console.log(ids[0], valueOfCurrentYearFirst)
-    console.log(ids[1], valueOfCurrentYearSecond)
+      return {
+        [id]: valueOfCurrentYear
+      }
+    })
 
-    const results =  [year, {
-      [ids[0]]: valueOfCurrentYearFirst,
-      [ids[1]]: valueOfCurrentYearSecond
-    }]
+    const emissionsByYearsWithIdsAndValues = [year, emissionsOfCurrentYearForIds]
 
-    return results
+    return emissionsByYearsWithIdsAndValues
   })
 
   const emissionsObject = Object.fromEntries(emissionsByYears)
