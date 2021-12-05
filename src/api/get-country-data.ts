@@ -2,6 +2,7 @@
 import axios from 'axios'
 import responseStaticJSON10 from './response/country10.json'
 import responseStaticJSON100 from './response/country100.json'
+import responseStaticJSON150 from './response/country150.json'
 import type { Country, CountryDataResponse, CountryEmissionsYearValueList, CountryEmissionsYearList, CountryEmissionsYearListKeyed } from '../types/api'
 
 function getYearCarbonMapping(countryData: CountryDataResponse[], id: Country['id']): CountryEmissionsYearListKeyed {
@@ -30,9 +31,13 @@ async function getCountryData(id: Country['id']): Promise<CountryEmissionsYearLi
 
     if (isDevMode) {
       if (id === 100) {
-        responseData = responseStaticJSON10
-      } else {
         responseData = responseStaticJSON100
+      } else {
+        if (id === 150) {
+          responseData = responseStaticJSON150
+        } else {
+          responseData = responseStaticJSON10
+        }
       }
     } else {
       const response = await axios.get(`https://api.footprintnetwork.org/v1/data/${id}/all/EFCpc`, {

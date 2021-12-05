@@ -9,8 +9,10 @@ require('dotenv').config();
 try {
   const countryCodes = countryCodesApi.getCountryCodes()
 
+  console.log(countryCodes)
+
   // temp
-  const ids = [100, 10]
+  const ids = [10, 100, 150]
   const requests = ids.map((id) => countryDataApi.getCountryData(id))
 
   Promise.allSettled(requests)
