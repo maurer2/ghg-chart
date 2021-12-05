@@ -9,10 +9,11 @@ require('dotenv').config();
 try {
   const countryCodes = countryCodesApi.getCountryCodes()
 
-  const countryData1 = countryDataApi.getCountryData(100)
-  const countryData2 = countryDataApi.getCountryData(1)
+  // temp
+  const ids = [100, 10]
+  const requests = ids.map((id) => countryDataApi.getCountryData(id))
 
-  Promise.allSettled([countryData1, countryData2])
+  Promise.allSettled(requests)
     .then((results) => {
       const mappedEntries = results
         .filter(result => result.status === 'fulfilled')
